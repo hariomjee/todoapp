@@ -32,7 +32,7 @@ public class TodoController {
         return "index";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/newTask")
     public String submitNewTask(@RequestParam("title") String title,
                          @RequestParam(value = "createDate" ) @DateTimeFormat(pattern = "yyyy-MM-dd") Date createDateInp ,     // It is necessary to define a pattern while sending date into database.
                           @RequestParam(value = "dueDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dueDateInp)
@@ -60,9 +60,10 @@ public class TodoController {
         return "redirect:/";
     }
 
-    public String deleteTask(@PathVariable("id") Long id){
-            todoService.deleteTask(id);
-            return "redirect:/";
+    @GetMapping("delete/{id}")
+    public String deleteBook(@PathVariable Long id){
+         todoService.deleteTask(id);
+        return "redirect:/";
     }
 
 

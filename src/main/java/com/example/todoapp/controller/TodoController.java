@@ -1,4 +1,6 @@
 package com.example.todoapp.controller;
+
+import ch.qos.logback.core.model.ImplicitModel;
 import com.example.todoapp.model.TodoItem;
 import com.example.todoapp.repository.TodoItemRepo;
 import com.example.todoapp.service.TodoService;
@@ -7,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -25,46 +28,57 @@ public class TodoController {
     TodoService todoService;
 
 
+    //Method for access all data from Server and show in UI
     @GetMapping("/")
-    public String allList(Model model){
-        List<TodoItem> allList=todoService.getList();
-        model.addAttribute("todo",allList);
+    public String allList(Model model) {
+        List<TodoItem> allList = todoService.getList();
+        model.addAttribute("todo", allList);
+        //System.out.println(allList);
+
         return "index";
     }
 
+    // Method for create new Task
     @PostMapping("/newTask")
-    public String submitNewTask(@RequestParam("title") String title,
-                         @RequestParam(value = "createDate" ) @DateTimeFormat(pattern = "yyyy-MM-dd") Date createDateInp ,     // It is necessary to define a pattern while sending date into database.
-                          @RequestParam(value = "dueDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dueDateInp)
+    public String submitNewTask(@RequestParam("title") String title,       // @RequestParam(name).... name field we define into index file.
+                                @RequestParam(value = "createDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date createDateInp,     // It is necessary to define a pattern while sending date into database.
+                                @RequestParam(value = "dueDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dueDateInp) {
+        TodoItem todoItem = new TodoItem();
+        todoItem.setTitle(title);
+        todoItem.setCreateDate(createDateInp);
+        todoItem.setDueDate(dueDateInp);
 
-    {
-
-
-        System.out.println("date : ->"+createDateInp);
-        todoService.newTask(title,createDateInp,dueDateInp);
+        //  System.out.println("date : ->"+createDateInp);
+        todoService.newTask(todoItem);
         return "redirect:/";
-
 
     }
 
-    @PostMapping("/action")
-    public String handleAction(@RequestParam("action") String action){
-        if(action.equals("edit")){
-            System.out.println("edit Hariom");
-        }
-        else if(action.equals("delete")){
-          //  System.out.println("delete  vidhi");
+    // Method for edit the Tasks
+    @PostMapping("/edit")
+    public String showEditModal(@RequestParam(value = "editItemId") Long id,
+                                @RequestParam(value = "editTitle") String title,
+                                @RequestParam(value = "editCreateDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date createDateInp,
+                                @RequestParam(value = "editDueDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dueDateInp){
+            TodoItem todoItem= new TodoItem();
+            todoItem.setId(id);
+            todoItem.setTitle(title);
+            todoItem.setCreateDate(createDateInp);
+            todoItem.setDueDate(dueDateInp);
 
+        todoService.updateTask(id,todoItem);
 
-        }
         return "redirect:/";
     }
 
+    // Method for Delete Task
     @GetMapping("delete/{id}")
     public String deleteBook(@PathVariable Long id){
-         todoService.deleteTask(id);
+        todoService.deleteTask(id);
         return "redirect:/";
     }
+
+
 
 
 

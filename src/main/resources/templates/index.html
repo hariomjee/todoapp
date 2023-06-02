@@ -29,17 +29,17 @@
                 <form th:action="@{/newTask}" method="post">
                     <div class="form-group">
                         <label for="title">Title:</label>
-                        <input type="text" class="form-control" id="title" name="title">
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="form-group">
                         <label for="createDate">Create date:</label>
                         <!--                        by default Current date will be in created date-->
                         <input type="date" class="form-control" id="createDate"
-                               th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" name="createDate">
+                               th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" name="createDate" required>
                     </div>
                     <div class="form-group">
                         <label for="dueDate">Due date:</label>
-                        <input type="date" class="form-control" id="dueDate" name="dueDate">
+                        <input type="date" class="form-control" id="dueDate" name="dueDate" required>
                     </div>
             </div>
             <div class="modal-footer">
@@ -98,17 +98,17 @@
                         <div class="form-group">
                             <label for="editTitle{tempData.count}">Title:</label>
                             <input type="text" class="form-control" id="editTitle{tempData.count}" name="editTitle"
-                                   th:value="${tempTodo.title}">
+                                   th:value="${tempTodo.title}" required>
                         </div>
                         <div class="form-group">
                             <label for="editCreateDate{tempData.count}">Create date:</label>
                             <input type="date" class="form-control" id="editCreateDate{tempData.count}"
-                                   name="editCreateDate" th:value="${#dates.format(tempTodo.createDate, 'yyyy-MM-dd')}">
+                                   name="editCreateDate" th:value="${#dates.format(tempTodo.createDate, 'yyyy-MM-dd')}" required>
                         </div>
                         <div class="form-group">
                             <label for="editDueDate{tempData.count}">Due date:</label>
                             <input type="date" class="form-control" id="editDueDate{tempData.count}" name="editDueDate"
-                                   th:value="${#dates.format(tempTodo.dueDate, 'yyyy-MM-dd')}">
+                                   th:value="${#dates.format(tempTodo.dueDate, 'yyyy-MM-dd')}" required>
                         </div>
 
                 </div>
